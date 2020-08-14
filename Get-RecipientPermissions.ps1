@@ -809,12 +809,12 @@ Begin{
                                         #Add Support for the -Confirm:$False Switch
                                         If(($PerformRemoval)-and($ConfirmPreference -eq 'None')){
                                         
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMP.AccessRights -InheritanceType All -Confirm:$False
+                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMPobj.AccessRights -InheritanceType All -Confirm:$False
                                         
                                         }
                                         Else{
                                         
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMP.AccessRights -InheritanceType All
+                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMPobj.AccessRights -InheritanceType All
                                         
                                         }
                                         
