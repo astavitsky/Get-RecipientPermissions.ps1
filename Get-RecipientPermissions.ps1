@@ -799,22 +799,20 @@ Begin{
                     $FMPobj_USER = Find-User $FMPobj.User
                     
                     $FMPobj_DEL = Grant-PermissionRemoval -SamAccountName $FMPobj_USER.SamAccountName -RecipientType $FMPobj_USER.RecipientTypeDetails -Status $FMPobj_USER.Status
-                                                                                
+    
                     if(($PerformRemoval) -and ($FMPobj_DEL)) {
                             
                                 If($PSCmdlet.ShouldProcess($($FMPobj_USER.DisplayName),"Removing Full mailbox permisison for user $($Identity.DisplayName)")){
                                                                         
                                     Try{
                                         
-                                        #Add Support for the -Confirm:$False Switch
-                                        If(($PerformRemoval)-and($ConfirmPreference -eq 'None')){
+                                        #Add Support for the -Confirm:$False Switch, AccessRights other than 'Full Access' and 'Deny'='True' ACL
+                                        If($PerformRemoval){
+                                            $CMDlet_RemovePerms = "Remove-MailboxPermission -Identity `$Identity.DisplayName -User `$FMPobj_USER.SamAccountName -AccessRights `$FMPobj.AccessRights -InheritanceType All"
+                                            If($ConfirmPreference -eq 'None') {$CMDlet_RemovePerms += " -Confirm:`$false"}
+                                            If($FMPobj.Deny) {$CMDlet_RemovePerms += " -Deny"}
                                         
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights FullAccess -InheritanceType All -Confirm:$False
-                                        
-                                        }
-                                        Else{
-                                        
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights FullAccess -InheritanceType All
+                                            Invoke-Expression $CMDlet_RemovePerms
                                         
                                         }
                                         
