@@ -807,15 +807,13 @@ Begin{
                                     Try{
                                         
                                         #Add Support for the -Confirm:$False Switch
-                                        If(($PerformRemoval)-and($ConfirmPreference -eq 'None')){
+                                        If($PerformRemoval){
+                                            $CMDlet_RemovePerms = "Remove-MailboxPermission -Identity `$Identity.DisplayName -User `$FMPobj_USER.SamAccountName -AccessRights `$FMPobj.AccessRights -InheritanceType All"
+                                            If($ConfirmPreference -eq 'None') {$CMDlet_RemovePerms += " -Confirm:`$false"}
+                                            If($FMPobj.Deny) {$CMDlet_RemovePerms += " -Deny"}
                                         
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMPobj.AccessRights -InheritanceType All -Confirm:$False
-                                        
-                                        }
-                                        Else{
-                                        
-                                            Remove-MailboxPermission -Identity $Identity.DisplayName -User $FMPobj_USER.SamAccountName -AccessRights $FMPobj.AccessRights -InheritanceType All
-                                        
+                                            Invoke-Expression $CMDlet_RemovePerms
+					    
                                         }
                                         
                                         If(($?)-and($WhatIfPreference -ne $True)){
